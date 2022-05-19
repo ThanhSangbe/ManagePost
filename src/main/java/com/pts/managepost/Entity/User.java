@@ -1,5 +1,6 @@
 package com.pts.managepost.Entity;
 
+import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,11 +22,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user")
 public class User {
+	public static String roleUser = "ROLE_USER";
+	public static String roleAdmin="ROLE_ADMIN";
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String username;
 	private String password;
+	private String role;
 	@OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-	private Set<Post> posts;
+	@JsonManagedReference(value = "user-post")
+	private Collection<Post> posts;
 }

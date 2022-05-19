@@ -1,5 +1,6 @@
 package com.pts.managepost.Entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,8 +31,10 @@ public class Post {
 	private String slug;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user")
+	@JsonBackReference(value = "user-post")
 	private User user;
-	@ManyToOne()
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_category")
+	@JsonBackReference(value = "post-category")
 	private Category category;
 }
