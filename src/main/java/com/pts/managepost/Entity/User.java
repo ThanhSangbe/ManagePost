@@ -3,6 +3,7 @@ package com.pts.managepost.Entity;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,8 +23,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user")
 public class User {
-	public static String roleUser = "ROLE_USER";
-	public static String roleAdmin="ROLE_ADMIN";
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -33,4 +32,6 @@ public class User {
 	@OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
 	@JsonManagedReference(value = "user-post")
 	private Collection<Post> posts;
+	@Column(name = "active")
+	private boolean active;
 }

@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.pts.managepost.DTO.PostDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

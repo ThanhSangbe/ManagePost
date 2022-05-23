@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 
+import com.pts.managepost.DTO.CategoryDTO;
 import com.pts.managepost.Entity.Category;
 
 public interface CategoryService {
@@ -19,12 +20,15 @@ public interface CategoryService {
 
 	List<Category> findAll(Sort sort);
 
-	List<Category> findAll();
+	List<CategoryDTO> findAll();
 
-	<S extends Category> S save(S entity);
+	CategoryDTO  save(CategoryDTO entity);
 
-	Optional<Category> findById(Integer id);
+	CategoryDTO findById(Integer id);
 
-	Category update(Category ca, int id);
+	CategoryDTO update(CategoryDTO ca, int id);
+	
+	void deleteCategory(CategoryDTO dto);
+
 
 }

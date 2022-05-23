@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pts.managepost.DTO.CategoryDTO;
 import com.pts.managepost.Entity.Category;
 import com.pts.managepost.Entity.Post;
+import com.pts.managepost.Exception.ResourceNotFoundException;
 import com.pts.managepost.Service.CategoryService;
 
 @RestController
@@ -29,49 +31,39 @@ public class CategoryController {
 	CategoryService categoryService;
 
 	@GetMapping("")
-	public List<Category> getAll() {
+	public List<CategoryDTO> getAll() {
 		return this.categoryService.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> get(@PathVariable int id) {
-		Optional<Category> cate = this.categoryService.findById(id);
-		if (cate != null)
-			return ResponseEntity.ok(cate.get());
-		else
-			return ResponseEntity.ok(new String("Id in my system don't exists in my system"));
+		return ResponseEntity.ok(this.categoryService.findById(id));
+		
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<?> add(@RequestBody Category ca) {
-		Category cate = this.categoryService.save(ca);
+	public ResponseEntity<?> add( @RequestBody CategoryDTO ca) {
+		CategoryDTO cate = this.categoryService.save(ca);
 		if (cate != null)
-			return new ResponseEntity<Category>(this.categoryService.save(ca), HttpStatus.CREATED);
+			return new ResponseEntity<CategoryDTO>(cate, HttpStatus.CREATED);
 		return new ResponseEntity<>(new String("Error: Category name is exists in my system"), HttpStatus.BAD_REQUEST);
 	}
 
 	@PutMapping("/update/{id}")
-	public ResponseEntity<?> update(@Validated @RequestBody Category ca, @PathVariable int id) {
-		Category cate = this.categoryService.update(ca, id);
-		if (cate != null)
-			return ResponseEntity.ok(cate);
-		else
-			return ResponseEntity.ok(new String("Error: Update category fail"));
-
+	public ResponseEntity<?> update(@Validated @RequestBody CategoryDTO ca, @PathVariable int id) {
+			return ResponseEntity.ok(this.categoryService.update(ca, id));	
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Category> delete(@PathVariable int id) {
-		Optional<Category> category = this.categoryService.findById(id);
-		return category.map(cate -> {
-			categoryService.deleteById(id);
-			return new ResponseEntity<>(cate, HttpStatus.OK);
-		}).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	public ResponseEntity<?> delete(@PathVariable int id) {
+		this.categoryService.deleteById(id);
+		return new ResponseEntity<String>(new String("Category deleted successfully"),HttpStatus.OK);
 	}
+	
 	@GetMapping("/allPost/{id}")
 	public ResponseEntity<?> getAllPostById(@PathVariable int id)
 	{
-		Category category = this.categoryService.findById(id).get();
+		CategoryDTO category = this.categoryService.findById(id);
 		return new ResponseEntity<Collection<Post>>(category.getPosts(),HttpStatus.OK);
 	}
 

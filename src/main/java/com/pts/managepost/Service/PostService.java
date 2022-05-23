@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 
+import com.pts.managepost.DTO.PostDTO;
 import com.pts.managepost.Entity.Post;
 
 public interface PostService {
@@ -20,16 +21,18 @@ public interface PostService {
 
 	boolean existsById(Integer id);
 
-	Optional<Post> findById(Integer id);
+	PostDTO findById(Integer id);
 
 	List<Post> findAll(Sort sort);
 
 	Page<Post> findAll(Pageable pageable);
 
-	List<Post> findAll();
+	List<PostDTO> findAll();
 
-	<S extends Post> S save(S entity,Authentication authentication);
+	PostDTO save(PostDTO entity,Authentication authentication);
 
-	Post update(int id, Post post);
+	PostDTO update(int id, PostDTO post);
+
+	void delete(PostDTO entity);
 
 }

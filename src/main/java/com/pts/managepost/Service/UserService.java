@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.pts.managepost.DTO.UserDTO;
 import com.pts.managepost.Entity.User;
 
 public interface UserService extends UserDetailsService  {
@@ -17,12 +18,15 @@ public interface UserService extends UserDetailsService  {
 
 	Optional<User> findById(Integer id);
 
-	List<User> findAll();
+	List<UserDTO> findAll();
 
-	<S extends User> S save(S entity);
+	 UserDTO  save(User entity);
 
 	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
-	User findByUsername(String username);
+	UserDTO findByUsername(String username);
 
+	boolean existsByUsername(String username);
+	UserDTO update(UserDTO user);
+	UserDTO getUserCurrent();
 }

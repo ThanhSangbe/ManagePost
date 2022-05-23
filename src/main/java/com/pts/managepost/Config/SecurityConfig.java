@@ -32,7 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.logout().logoutSuccessUrl("/");
 		http.exceptionHandling().accessDeniedPage("/login?accessDenied");
 		http.authorizeRequests().antMatchers("/").permitAll();
+		http.authorizeRequests().antMatchers("/api/user/**").access("hasRole('ROLE_USER')");
+		http.authorizeRequests().antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')");
 		http.authorizeRequests().antMatchers("/api/**").hasAnyAuthority("ROLE_ADMIN","ROLE_USER");
+		
 		http.csrf().disable();
 		
 	}

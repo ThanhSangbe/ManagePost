@@ -2,7 +2,9 @@ package com.pts.managepost.Service.Impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +12,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.pts.managepost.DTO.CategoryDTO;
+import com.pts.managepost.DTO.PostDTO;
+import com.pts.managepost.DTO.UserDTO;
 import com.pts.managepost.Entity.Category;
 import com.pts.managepost.Entity.Post;
 import com.pts.managepost.Entity.User;
@@ -27,20 +32,24 @@ public class PostServiceImpl implements PostService {
 	private UserService userService;
 	@Autowired
 	private CategoryService categoryService;
-
+	@Autowired 
+	private ModelMapper modelMapper;
 	@Override
-	public Post  save(Post entity, Authentication authentication) {
+	public PostDTO  save(PostDTO entity, Authentication authentication) {
 		String username =  authentication.getName();
-		User user = userService.findByUsername(username);
+		UserDTO user = userService.findByUsername(username);
 		entity.setUser(user);
-		Category c = this.categoryService.findById(entity.getCategory().getId()).get();
+		CategoryDTO c = this.categoryService.findById(entity.getCategory().getId());
 		entity.setCategory(c);
-		return postRepository.save(entity);
+		this.postRepository.save(this.modelMapper.map(entity, Post.class));
+		return entity;
 	}
 
 	@Override
-	public List<Post> findAll() {
-		return postRepository.findAll();
+	public List<PostDTO> findAll() {
+		return postRepository.findAll().stream().map(
+			post -> this.modelMapper.map(post, PostDTO.class)	
+				).collect(Collectors.toList());
 	}
 
 	@Override
@@ -54,10 +63,10 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Optional<Post> findById(Integer id) {
-		if(!this.postRepository.existsById(id))
-			throw new ResourceNotFoundException("Post","id",String.valueOf(id) );
-		return postRepository.findById(id);
+	public PostDTO findById(Integer id) {
+
+		Post p = postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Post","id",String.valueOf(id)));
+		return this.modelMapper.map(p, PostDTO.class);
 	}
 
 	@Override
@@ -72,9 +81,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public void deleteById(Integer id) {
-		
-		if(!this.postRepository.existsById(id))
-			throw new ResourceNotFoundException("Post","id",String.valueOf(id) );
+		PostDTO p = this.findById(id);
 		postRepository.deleteById(id);
 	}
 
@@ -83,15 +90,18 @@ public class PostServiceImpl implements PostService {
 		postRepository.deleteAll();
 	}
 	@Override
-	public Post update(int id, Post post)
+	public void delete(PostDTO entity) {
+		
+		postRepository.delete(this.modelMapper.map(entity, Post.class));
+	}
+
+	@Override
+	public PostDTO update(int id, PostDTO post)
 	{
-		Post p = this.postRepository.findById(id).get();
-		if(p != null)
-		{
-			post.setId(p.getId());
-			this.postRepository.save(post);
-		}
-		throw new ResourceNotFoundException("Post","id",String.valueOf(id) );
+		PostDTO d = this.findById(id);
+		Post p = this.modelMapper.map(post, Post.class);
+		p.setId(id);
+		return modelMapper.map(this.postRepository.save(p),PostDTO.class);
 	}
 	
 	
