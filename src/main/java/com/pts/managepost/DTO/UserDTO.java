@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pts.managepost.Entity.Post;

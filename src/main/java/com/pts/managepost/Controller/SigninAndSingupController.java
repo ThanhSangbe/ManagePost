@@ -1,5 +1,7 @@
 package com.pts.managepost.Controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +25,7 @@ public class SigninAndSingupController {
 		}
 		
 		@PostMapping("/signup")
-		public ResponseEntity<?> signup(@Validated @RequestBody User user)
+		public ResponseEntity<?> signup(@Valid @RequestBody User user)
 		{
 			
 			if(this.userService.save(user) == null)

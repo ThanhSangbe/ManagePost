@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class CategoryDTO {
 	private int id;
-	
 	private String name;
 	private String slug;
 	private Collection<Post> posts;

@@ -1,14 +1,15 @@
-package com.pts.managepost.Controller;
+	package com.pts.managepost.Controller;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pts.managepost.DTO.CategoryDTO;
-import com.pts.managepost.Entity.Category;
 import com.pts.managepost.Entity.Post;
-import com.pts.managepost.Exception.ResourceNotFoundException;
 import com.pts.managepost.Service.CategoryService;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
@@ -42,7 +41,7 @@ public class CategoryController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<?> add( @RequestBody CategoryDTO ca) {
+	public ResponseEntity<?> add(@Valid @RequestBody CategoryDTO ca) {
 		CategoryDTO cate = this.categoryService.save(ca);
 		if (cate != null)
 			return new ResponseEntity<CategoryDTO>(cate, HttpStatus.CREATED);
